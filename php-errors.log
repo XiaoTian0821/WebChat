@@ -1,0 +1,309 @@
+[24-Sep-2026 03:26:51 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in C:\xampp\htdocs\WebChat\includes\database.php:30
+Stack trace:
+#0 C:\xampp\htdocs\WebChat\includes\database.php(30): PDO->prepare('UPDATE users SE...')
+#1 C:\xampp\htdocs\WebChat\includes\database.php(62): Database::query('UPDATE users SE...', Array)
+#2 C:\xampp\htdocs\WebChat\includes\auth.php(116): Database::update('users', Array, 'id = ?', Array)
+#3 C:\xampp\htdocs\WebChat\login.php(25): loginUser('ali', 'ali123')
+#4 {main}
+  thrown in C:\xampp\htdocs\WebChat\includes\database.php on line 30
+[24-Sep-2026 11:27:19 Asia/Kuala_Lumpur] PHP Parse error:  syntax error, unexpected token ">" in C:\xampp\htdocs\WebChat\forums.php on line 32
+[24-Sep-2026 03:27:41 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in C:\xampp\htdocs\WebChat\includes\database.php:30
+Stack trace:
+#0 C:\xampp\htdocs\WebChat\includes\database.php(30): PDO->prepare('UPDATE users SE...')
+#1 C:\xampp\htdocs\WebChat\includes\database.php(62): Database::query('UPDATE users SE...', Array)
+#2 C:\xampp\htdocs\WebChat\includes\auth.php(116): Database::update('users', Array, 'id = ?', Array)
+#3 C:\xampp\htdocs\WebChat\login.php(25): loginUser('ali', 'ali123')
+#4 {main}
+  thrown in C:\xampp\htdocs\WebChat\includes\database.php on line 30
+[24-Sep-2026 03:28:24 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in C:\xampp\htdocs\WebChat\includes\database.php:30
+Stack trace:
+#0 C:\xampp\htdocs\WebChat\includes\database.php(30): PDO->prepare('UPDATE users SE...')
+#1 C:\xampp\htdocs\WebChat\includes\database.php(62): Database::query('UPDATE users SE...', Array)
+#2 C:\xampp\htdocs\WebChat\includes\auth.php(116): Database::update('users', Array, 'id = ?', Array)
+#3 C:\xampp\htdocs\WebChat\login.php(25): loginUser('ali', 'ali123')
+#4 {main}
+  thrown in C:\xampp\htdocs\WebChat\includes\database.php on line 30
+[24-Sep-2026 03:29:49 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in C:\xampp\htdocs\WebChat\includes\database.php:30
+Stack trace:
+#0 C:\xampp\htdocs\WebChat\includes\database.php(30): PDO->prepare('UPDATE users SE...')
+#1 C:\xampp\htdocs\WebChat\includes\database.php(62): Database::query('UPDATE users SE...', Array)
+#2 C:\xampp\htdocs\WebChat\includes\auth.php(116): Database::update('users', Array, 'id = ?', Array)
+#3 C:\xampp\htdocs\WebChat\login.php(25): loginUser('ali', 'ali123')
+#4 {main}
+  thrown in C:\xampp\htdocs\WebChat\includes\database.php on line 30
+[24-Sep-2026 11:32:40 Asia/Kuala_Lumpur] PHP Parse error:  syntax error, unexpected token ">" in C:\xampp\htdocs\WebChat\forums.php on line 32
+[24-Sep-2026 11:32:48 Asia/Kuala_Lumpur] PHP Parse error:  syntax error, unexpected token ">" in C:\xampp\htdocs\WebChat\forums.php on line 32
+[24-Sep-2026 03:33:58 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in C:\xampp\htdocs\WebChat\includes\database.php:30
+Stack trace:
+#0 C:\xampp\htdocs\WebChat\includes\database.php(30): PDO->prepare('UPDATE users SE...')
+#1 C:\xampp\htdocs\WebChat\includes\database.php(62): Database::query('UPDATE users SE...', Array)
+#2 C:\xampp\htdocs\WebChat\includes\auth.php(116): Database::update('users', Array, 'id = ?', Array)
+#3 C:\xampp\htdocs\WebChat\login.php(25): loginUser('meimei', 'meimei123')
+#4 {main}
+  thrown in C:\xampp\htdocs\WebChat\includes\database.php on line 30
+[24-Sep-2026 11:34:37 Asia/Kuala_Lumpur] PHP Parse error:  syntax error, unexpected token ">" in C:\xampp\htdocs\WebChat\forums.php on line 32
+[24-Sep-2026 03:34:43 UTC] PHP Warning:  Array to string conversion in C:\xampp\htdocs\WebChat\profile.php on line 187
+[24-Sep-2026 03:34:57 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in C:\xampp\htdocs\WebChat\includes\database.php:30
+Stack trace:
+#0 C:\xampp\htdocs\WebChat\includes\database.php(30): PDO->prepare('UPDATE users SE...')
+#1 C:\xampp\htdocs\WebChat\includes\database.php(62): Database::query('UPDATE users SE...', Array)
+#2 C:\xampp\htdocs\WebChat\includes\auth.php(116): Database::update('users', Array, 'id = ?', Array)
+#3 C:\xampp\htdocs\WebChat\login.php(25): loginUser('abu', 'abu123')
+#4 {main}
+  thrown in C:\xampp\htdocs\WebChat\includes\database.php on line 30
+[24-Sep-2026 03:35:13 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in C:\xampp\htdocs\WebChat\includes\database.php:30
+Stack trace:
+#0 C:\xampp\htdocs\WebChat\includes\database.php(30): PDO->prepare('UPDATE users SE...')
+#1 C:\xampp\htdocs\WebChat\includes\database.php(62): Database::query('UPDATE users SE...', Array)
+#2 C:\xampp\htdocs\WebChat\includes\auth.php(116): Database::update('users', Array, 'id = ?', Array)
+#3 C:\xampp\htdocs\WebChat\login.php(25): loginUser('ali', 'ali123')
+#4 {main}
+  thrown in C:\xampp\htdocs\WebChat\includes\database.php on line 30
+[24-Sep-2026 05:09:54 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in C:\xampp\htdocs\WebChat\includes\database.php:30
+Stack trace:
+#0 C:\xampp\htdocs\WebChat\includes\database.php(30): PDO->prepare('UPDATE users SE...')
+#1 C:\xampp\htdocs\WebChat\includes\database.php(62): Database::query('UPDATE users SE...', Array)
+#2 C:\xampp\htdocs\WebChat\reset_passwords.php(18): Database::update('users', Array, 'username = ?', Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\WebChat\includes\database.php on line 30
+[24-Sep-2026 05:36:30 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:37:01 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:37:25 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:43 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:44 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:44 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:44 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:45 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:45 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:46 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:47 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:47 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:47 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:48 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:48 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:48 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:49 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:49 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:49 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:50 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:45:50 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:46:06 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:46:31 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:47:36 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:47:40 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:47:48 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:48:01 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:49:50 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:54:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:58:45 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 05:59:37 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 06:00:02 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 06:00:17 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 06:09:14 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 06:17:47 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 06:22:28 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 06:46:33 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:30:18 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:31:05 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:41:56 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:42:00 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:46:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:47:03 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:47:06 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:47:33 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:47:44 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:48:16 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:48:24 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:48:27 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 15:51:35 Asia/Kuala_Lumpur] PHP Warning:  require_once(../includes/bootstrap.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\WebChat\test_notifications_simple.php on line 12
+[24-Sep-2026 15:51:35 Asia/Kuala_Lumpur] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/bootstrap.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\WebChat\test_notifications_simple.php:12
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\test_notifications_simple.php on line 12
+[24-Sep-2026 07:51:51 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:52:13 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:52:25 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:52:26 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:52:26 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:52:26 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:52:27 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:52:28 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:52:29 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35
+[24-Sep-2026 07:52:29 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNotificationIconColor() in C:\xampp\htdocs\WebChat\notifications.php:35
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\WebChat\notifications.php on line 35

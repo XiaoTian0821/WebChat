@@ -7,14 +7,14 @@ requireLogin();
 
 $userId = getCurrentUserId();
 $title = 'Chat';
-$additionalScripts = ['/assets/js/chat.js'];
+$additionalScripts = ['/assets/js/chat.js', '/assets/js/calls.js'];
 
 // Get URL parameter for direct chat
 $chatId = (int) ($_GET['id'] ?? 0);
 $chatType = $_GET['type'] ?? 'private';
 ?>
 
-<div class="chat-container">
+<div class="chat-container" id="chat-container" data-chat-id="<?php echo $chatId; ?>">
     <!-- Sidebar -->
     <div class="chat-sidebar" id="chat-sidebar">
         <div class="sidebar-header">
@@ -53,11 +53,11 @@ $chatType = $_GET['type'] ?? 'private';
                 <div id="chat-header-name" class="user-name"></div>
                 <div id="chat-header-status" class="user-status text-muted small"></div>
             </div>
-            <div class="chat-header-actions d-flex">
-                <button class="btn btn-light btn-icon" onclick="window.chatApp?.startVoiceCall(<?php echo $chatId; ?>)" title="Voice Call">
+            <div class="chat-header-actions d-flex gap-1">
+                <button class="btn btn-light btn-icon" id="voice-call-btn" title="Voice Call">
                     <i class="fas fa-phone"></i>
                 </button>
-                <button class="btn btn-light btn-icon" onclick="window.chatApp?.startVideoCall(<?php echo $chatId; ?>)" title="Video Call">
+                <button class="btn btn-light btn-icon" id="video-call-btn" title="Video Call">
                     <i class="fas fa-video"></i>
                 </button>
                 <button class="btn btn-light btn-icon" id="toggle-info" title="Info">
@@ -83,17 +83,33 @@ $chatType = $_GET['type'] ?? 'private';
 
         <!-- Input Area -->
         <div class="chat-input-area">
-            <div class="position-relative" id="emoji-picker">
-                <button class="input-action-btn btn-attach" type="button" title="Emoji">
+            <div class="position-relative" id="emoji-picker-wrapper">
+                <button class="input-action-btn" type="button" id="emoji-btn" title="Emoji">
                     <i class="fas fa-smile"></i>
                 </button>
+                <div class="emoji-picker-dropdown d-none" id="emoji-picker-dropdown">
+                    <div class="emoji-picker-body">
+                        <button type="button" class="emoji-btn" data-emoji="😀">😀</button>
+                        <button type="button" class="emoji-btn" data-emoji="😂">😂</button>
+                        <button type="button" class="emoji-btn" data-emoji="😍">😍</button>
+                        <button type="button" class="emoji-btn" data-emoji="🥰">🥰</button>
+                        <button type="button" class="emoji-btn" data-emoji="😎">😎</button>
+                        <button type="button" class="emoji-btn" data-emoji="👍">👍</button>
+                        <button type="button" class="emoji-btn" data-emoji="❤️">❤️</button>
+                        <button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
+                        <button type="button" class="emoji-btn" data-emoji="👏">👏</button>
+                        <button type="button" class="emoji-btn" data-emoji="😢">😢</button>
+                        <button type="button" class="emoji-btn" data-emoji="😮">😮</button>
+                        <button type="button" class="emoji-btn" data-emoji="🎉">🎉</button>
+                    </div>
+                </div>
             </div>
             <textarea class="form-control" id="message-input" placeholder="Type a message..." rows="1"></textarea>
             <input type="file" id="attach-input" class="d-none" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain,application/zip">
-            <button class="input-action-btn btn-attach" type="button" id="attach-btn" title="Attach File">
+            <button class="input-action-btn" type="button" id="attach-btn" title="Attach File">
                 <i class="fas fa-paperclip"></i>
             </button>
-            <button class="input-action-btn btn-voice" type="button" id="voice-btn" title="Voice Message">
+            <button class="input-action-btn" type="button" id="voice-btn" title="Voice Message">
                 <i class="fas fa-microphone"></i>
             </button>
             <button class="input-action-btn btn-send" type="button" id="send-btn" title="Send">
@@ -112,7 +128,7 @@ $chatType = $_GET['type'] ?? 'private';
     </div>
 
     <!-- Info Panel -->
-    <div class="chat-info-panel" id="chat-info-panel" style="display:none;">
+    <div class="chat-info-panel d-none" id="chat-info-panel">
         <div class="info-panel-section">
             <h6>Media & Files</h6>
             <div class="media-grid" id="media-grid">
@@ -149,11 +165,5 @@ $chatType = $_GET['type'] ?? 'private';
         <button class="call-btn end-call" id="reject-call-btn" title="Reject"><i class="fas fa-phone-slash"></i></button>
     </div>
 </div>
-
-<script>
-const CURRENT_USER_ID = <?php echo $userId; ?>;
-const DEFAULT_CHAT_ID = <?php echo $chatId; ?>;
-const DEFAULT_CHAT_TYPE = '<?php echo $chatType; ?>';
-</script>
 
 <?php require_once 'includes/layout_end.php'; ?>
