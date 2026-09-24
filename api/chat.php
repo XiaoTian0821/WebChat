@@ -22,6 +22,7 @@ switch ($action) {
         break;
 
     case 'chat_info':
+    case 'user_info':
         $chatId = (int) ($_GET['id'] ?? 0);
         if ($chatId === $userId) { jsonResponse(['success' => false, 'message' => 'Invalid'], 400); }
         $user = Database::fetchOne("SELECT id, username, avatar, status, last_seen, status_message FROM users WHERE id = ?", [$chatId]);

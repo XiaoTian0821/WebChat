@@ -41,7 +41,7 @@ $unreadCount = (int) Database::fetchColumn("SELECT COUNT(*) FROM notifications W
         <div class="list-group list-group-flush">
             <?php if (count($notifications) > 0): ?>
                 <?php foreach ($notifications as $n): ?>
-                <a href="<?php echo getNotificationLink($n); ?><?php echo ($n['type'] === 'incoming_call' && $n['reference_id']) ? '&call_id=' . $n['reference_id'] : ''; ?>" class="notification-item list-group-item list-group-item-action <?php echo $n['is_read'] ? '' : 'unread'; ?>">
+                <a href="<?php echo getNotificationLink($n); ?>" class="notification-item list-group-item list-group-item-action <?php echo $n['is_read'] ? '' : 'unread'; ?>">
                     <div class="d-flex align-items-start">
                         <div class="notification-icon me-3 <?php echo getNotificationIconColor($n['type']); ?>">
                             <i class="fas <?php echo getNotificationIcon($n['type']); ?>"></i>
@@ -74,24 +74,30 @@ $unreadCount = (int) Database::fetchColumn("SELECT COUNT(*) FROM notifications W
 
 <?php
 function getNotificationLink($n) {
+    $base = APP_URL;
     switch ($n['type']) {
         case 'friend_request':
         case 'friend_accepted':
-            return APP_URL . '/friends.php';
+            return $base . '/friends.php';
         case 'new_message':
-            return APP_URL . '/chat.php';
+            return $base . '/chat.php';
         case 'group_message':
         case 'group_invitation':
-            return APP_URL . '/groups.php';
+            return $base . '/groups.php';
         case 'incoming_call':
         case 'call_missed':
         case 'call_accepted':
         case 'call_rejected':
         case 'call_ended':
-            return APP_URL . '/chat.php';
+            // Properly append query parameter
+            $url = $base . '/chat.php';
+            if (!empty($n['reference_id'])) {
+                $url .= '?call_id=' . $n['reference_id'];
+            }
+            return $url;
         case 'forum_comment':
         case 'forum_like':
-            return APP_URL . '/forums.php';
+            return $base . '/forums.php';
         default:
             return '#';
     }

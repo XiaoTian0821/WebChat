@@ -21,6 +21,7 @@ $unreadNotifs = isLoggedIn() ? getUnreadNotificationCount((int)$user['id']) : 0;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="<?php echo APP_URL; ?>/assets/css/app.css?v=<?php echo APP_VERSION; ?>" rel="stylesheet">
+    <link href="<?php echo APP_URL; ?>/assets/css/call.css?v=<?php echo APP_VERSION; ?>" rel="stylesheet">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark main-navbar">

@@ -1,4 +1,4 @@
-// WebConnect - Chat Module
+// WebConnect - Chat Module (Original Design)
 class ChatApp {
     constructor() {
         this.currentChatId = null;
@@ -218,7 +218,9 @@ class ChatApp {
                     this.els.conversationList.querySelectorAll('.conversation-item').forEach(el => {
                         el.addEventListener('click', e => {
                             e.preventDefault();
-                            this.selectConversation(parseInt(el.dataset.id));
+                            const id = parseInt(el.dataset.id);
+                            console.log('[ChatApp] Clicked conversation with id:', id);
+                            this.selectConversation(id);
                         });
                     });
                 } else {
@@ -250,106 +252,128 @@ class ChatApp {
         `;
     }
 
+    getAvatarHTML(c) {
+        if (c.avatar) {
+            return `<img src="/api/media.php?file=${encodeURIComponent(c.avatar)}&type=avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" class="me-2">`;
+        }
+        const initial = c.username ? c.username.charAt(0).toUpperCase() : '?';
+        return `<div class="avatar avatar-default" style="width:40px;height:40px;border-radius:50%;">${initial}</div>`;
+    }
+
     async selectConversation(id) {
+        console.log('[ChatApp] Selecting conversation:', id, 'currentChatId:', this.currentChatId);
         this.currentChatId = id;
         this.currentChatType = 'private';
-        if (this.els.conversationList) {
-            this.els.conversationList.querySelectorAll('.conversation-item').forEach(el => {
-                el.classList.toggle('active', el.dataset.id == id);
-            });
+        
+        // Update UI - do NOT hide sidebar
+        document.querySelectorAll('.conversation-item').forEach(el => el.classList.remove('active'));
+        const el = document.querySelector(`.conversation-item[data-id="${id}"]`);
+        if (el) el.classList.add('active');
+        
+        // Show chat main area
+        if (this.els.chatMain) {
+            this.els.chatMain.classList.remove('chat-hidden');
         }
-        this.showChat();
+        
+        // Load user info
+        await this.loadUserInfo(id);
+        
+        // Load messages
         await this.loadMessages();
-        await this.loadChatInfo(id);
     }
 
-    async loadChatInfo(id) {
+    async loadUserInfo(userId) {
         try {
-            const res = await fetch(`/api/chat.php?action=chat_info&id=${id}`);
+            const res = await fetch('/api/chat.php?action=user_info&id=' + userId);
             const data = await res.json();
-            if (data.success && this.els.chatHeaderName) {
-                this.els.chatHeaderName.textContent = data.data.username;
-                this.els.chatHeaderStatus.innerHTML = getStatusBadge(data.data.status, data.data.last_seen);
-                this.els.chatHeaderAvatar.innerHTML = this.getAvatarHTML(data.data, 40);
+            if (data.success && data.data) {
+                const user = data.data;
+                if (this.els.chatHeaderName) {
+                    this.els.chatHeaderName.textContent = user.username;
+                }
+                if (this.els.chatHeaderStatus) {
+                    this.els.chatHeaderStatus.textContent = user.status || 'Offline';
+                }
+                if (this.els.chatHeaderAvatar) {
+                    this.els.chatHeaderAvatar.innerHTML = this.getAvatarHTML(user);
+                }
             }
-        } catch (e) { console.error('Load chat info error:', e); }
-    }
-
-    showChat() {
-        if (this.els.chatMain) this.els.chatMain.classList.remove('chat-hidden');
-    }
-
-    showSidebar() {
-        if (this.els.chatMain) this.els.chatMain.classList.add('chat-hidden');
-        this.currentChatId = null;
-    }
-
-    toggleInfoPanel() {
-        const panel = this.els.chatInfoPanel;
-        if (panel) panel.classList.toggle('d-none');
+        } catch (e) {
+            console.error('Load user info error:', e);
+        }
     }
 
     async loadMessages() {
-        if (!this.currentChatId) return;
+        if (!this.currentChatId) {
+            console.log('[ChatApp] No currentChatId set, skipping loadMessages');
+            return;
+        }
+        console.log('[ChatApp] Loading messages for chat_id:', this.currentChatId);
         try {
-            const res = await fetch(`/api/messages.php?action=get&type=private&id=${this.currentChatId}`);
+            const res = await fetch('/api/messages.php?action=get&type=private&chat_id=' + this.currentChatId);
             const data = await res.json();
-            if (data.success && this.els.messagesArea) {
-                this.els.messagesArea.innerHTML = data.data.map(m => this.renderMessage(m)).join('');
+            if (data.success && data.data) {
                 this.messages = data.data;
-                this.scrollToBottom();
-                this.bindMessageEvents();
+                this.renderMessages();
             }
-        } catch (e) { console.error(e); }
+        } catch (e) {
+            console.error('Load messages error:', e);
+        }
     }
 
-    bindMessageEvents() {
-        this.els.messagesArea?.querySelectorAll('.msg-bubble').forEach(el => {
-            el.addEventListener('click', e => {
-                const msgId = parseInt(el.dataset.id);
-                if (e.target.closest('.msg-reply-btn')) {
-                    const msg = this.messages.find(m => m.id === msgId);
-                    if (msg) this.startReply(msg);
-                }
-            });
-        });
+    renderMessages() {
+        if (!this.els.messagesArea) return;
+        if (this.messages.length === 0) {
+            this.els.messagesArea.innerHTML = '<div class="empty-state"><i class="fas fa-comments fa-3x mb-3"></i><p>No messages yet</p></div>';
+            return;
+        }
+        
+        this.els.messagesArea.innerHTML = this.messages.map(m => this.renderMessage(m)).join('');
+        this.scrollToBottom();
     }
 
     renderMessage(m) {
-        const isMe = m.sender_id == getCurrentUserId();
-        const bubbleClass = isMe ? 'msg-bubble msg-sent' : 'msg-bubble msg-received';
-        const avatar = isMe
-            ? this.getAvatarHTML({ username: 'Me' })
-            : this.getAvatarHTML({ username: m.sender_username, avatar: m.sender_avatar });
+        const isMine = m.sender_id == window.currentUserId;
+        const time = m.created_at ? new Date(m.created_at).toLocaleTimeString() : '';
+        const avatar = isMine ? '' : `<img src="/api/media.php?file=${encodeURIComponent(m.avatar || '')}&type=avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;" class="me-2">`;
+        
         let content = '';
-        if (m.type === 'text' || !m.type) {
-            content = `<div class="msg-text">${this.esc(m.body)}</div>`;
-        } else if (m.type === 'image') {
-            content = `<img src="/api/media.php?file=${encodeURIComponent(m.file_path)}&type=image" class="msg-image" alt="image">`;
-        } else if (m.type === 'file') {
-            content = `<div class="msg-file"><i class="fas fa-file"></i> ${this.esc(m.file_name)}</div>`;
-        } else if (m.type === 'voice') {
-            content = `<audio controls src="/api/media.php?file=${encodeURIComponent(m.file_path)}&type=voice" style="width:200px;"></audio>`;
+        if (m.message_type === 'image') {
+            content = `<img src="/api/media.php?file=${encodeURIComponent(m.body)}&type=message" class="img-fluid rounded" style="max-width:300px;">`;
+        } else if (m.message_type === 'voice') {
+            content = `<audio controls src="/api/media.php?file=${encodeURIComponent(m.body)}&type=voice"></audio>`;
+        } else {
+            content = this.esc(m.body || '');
         }
+        
         return `
-            <div class="${bubbleClass}" data-id="${m.id}" data-sender="${m.sender_id}">
-                ${!isMe ? avatar : ''}
-                <div class="msg-content">
-                    ${m.reply_to_id ? `<div class="msg-reply">Reply: ${this.esc(m.reply_body || '[deleted]')}</div>` : ''}
-                    ${content}
-                    <div class="msg-meta">
-                        <span class="msg-time">${formatTime(m.created_at)}</span>
-                        ${m.status === 'read' ? '<span class="msg-status read">✓✓</span>' : m.status === 'delivered' ? '<span class="msg-status">✓✓</span>' : '<span class="msg-status">✓</span>'}
-                    </div>
+            <div class="message ${isMine ? 'message-mine' : 'message-other'}" data-id="${m.id}">
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">
+                    <div class="message-bubble">${content}</div>
+                    <div class="message-time">${time}</div>
                 </div>
-                ${isMe ? avatar : ''}
             </div>
         `;
+    }
+
+    esc(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    scrollToBottom() {
+        if (this.els.messagesArea) {
+            this.els.messagesArea.scrollTop = this.els.messagesArea.scrollHeight;
+        }
     }
 
     async sendMessage() {
         const input = this.els.messageInput;
         const text = input?.value?.trim();
+        console.log('[ChatApp] sendMessage - text:', text, 'currentChatId:', this.currentChatId);
         if (!text || !this.currentChatId) return;
         const replyTo = this.replyTo;
         try {
@@ -399,12 +423,15 @@ class ChatApp {
         formData.append('file', file);
         formData.append('chat_id', this.currentChatId);
         formData.append('type', 'private');
+        formData.append('action', 'send');
+        formData.append('action', 'send');
         try {
             const res = await fetch('/api/upload.php', { method: 'POST', body: formData });
             const data = await res.json();
             console.log('[ChatApp] File upload response:', data);
             if (data.success) await this.loadMessages();
-        } catch (e) { console.error(e); }
+            else console.error('[ChatApp] Upload failed:', data.message);
+        } catch (e) { console.error('[ChatApp] Upload error:', e); }
         e.target.value = '';
     }
 
@@ -459,6 +486,7 @@ class ChatApp {
         formData.append('file', blob, 'voice.webm');
         formData.append('chat_id', this.currentChatId);
         formData.append('type', 'private');
+        formData.append('action', 'send');
         try {
             const res = await fetch('/api/upload.php', { method: 'POST', body: formData });
             const data = await res.json();
@@ -485,73 +513,26 @@ class ChatApp {
         if (this.els.replyBar) this.els.replyBar.classList.add('d-none');
     }
 
-    async toggleReaction(msgId, emoji) {
-        try {
-            await fetch('/api/reactions.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'toggle', message_id: msgId, emoji })
-            });
-            await this.loadMessages();
-        } catch (e) { console.error(e); }
+    showSidebar() {
+        // Do NOT hide sidebar - keep it visible
+        if (this.els.chatMain) this.els.chatMain.classList.add('chat-hidden');
     }
 
-    async deleteMessage(msgId) {
-        if (!confirm('Delete this message?')) return;
-        try {
-            await fetch('/api/messages.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'delete', message_id: msgId })
-            });
-            await this.loadMessages();
-        } catch (e) { console.error(e); }
-    }
-
-    startPolling() {
-        clearInterval(this.pollInterval);
-        this.pollInterval = setInterval(() => {
-            if (this.currentChatId) this.loadMessages();
-            this.updateNotificationBadge();
-        }, 2000);
-    }
-
-    async updateNotificationBadge() {
-        try {
-            const res = await fetch('/api/notifications.php?action=count');
-            const data = await res.json();
-            if (data.success && data.data !== undefined) {
-                const badge = document.querySelector('.nav-link[href*="notifications"] .badge, .navbar .badge');
-                if (badge) {
-                    badge.textContent = data.data;
-                    badge.style.display = data.data > 0 ? '' : 'none';
-                }
-            }
-        } catch (e) {}
-    }
-
-    scrollToBottom() {
-        if (this.els.messagesArea) {
-            this.els.messagesArea.scrollTop = this.els.messagesArea.scrollHeight;
+    toggleInfoPanel() {
+        if (this.els.chatInfoPanel) {
+            this.els.chatInfoPanel.classList.toggle('d-none');
         }
-    }
-
-    getAvatarHTML(m, size = 32) {
-        if (m.avatar) {
-            return `<img src="/api/media.php?file=${encodeURIComponent(m.avatar)}&type=avatar" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;" class="me-1">`;
-        }
-        const initial = (m.username || 'U')[0].toUpperCase();
-        return `<div class="avatar avatar-default" style="width:${size}px;height:${size}px;font-size:${size*0.4}px;flex-shrink:0;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);">${initial}</div>`;
     }
 
     startVoiceCall() {
-        console.log('[ChatApp] startVoiceCall', this.currentChatId);
-        if (!this.currentChatId) {
-            alert('Please select a conversation first');
+        console.log('[ChatApp] startVoiceCall called, currentChatId:', this.currentChatId);
+        const targetId = this.currentChatId;
+        if (!targetId) {
+            alert('No recipient selected');
             return;
         }
         if (window.calls) {
-            window.calls.startVoiceCall(this.currentChatId);
+            window.calls.startVoiceCall(targetId);
         } else {
             console.warn('[ChatApp] calls.js not loaded');
             alert('Calling feature is not available');
@@ -559,13 +540,14 @@ class ChatApp {
     }
 
     startVideoCall() {
-        console.log('[ChatApp] startVideoCall', this.currentChatId);
-        if (!this.currentChatId) {
-            alert('Please select a conversation first');
+        console.log('[ChatApp] startVideoCall called, currentChatId:', this.currentChatId);
+        const targetId = this.currentChatId;
+        if (!targetId) {
+            alert('No recipient selected');
             return;
         }
         if (window.calls) {
-            window.calls.startVideoCall(this.currentChatId);
+            window.calls.startVideoCall(targetId);
         } else {
             console.warn('[ChatApp] calls.js not loaded');
             alert('Calling feature is not available');
@@ -590,6 +572,15 @@ class ChatApp {
         const m = Math.floor(sec / 60);
         const s = Math.floor(sec % 60);
         return `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    startPolling() {
+        this.pollInterval = setInterval(async () => {
+            if (this.currentChatId) {
+                await this.loadMessages();
+                await this.loadUserInfo(this.currentChatId);
+            }
+        }, 3000);
     }
 }
 

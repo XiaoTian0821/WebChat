@@ -216,11 +216,11 @@ function getLastGroupMessage(int $groupId): ?array {
 }
 
 /**
- * Get conversation partners for a user
+ * Get conversation partners for a user - FIXED: remove duplicates
  */
 function getConversations(int $userId): array {
     return Database::fetchAll(
-        "SELECT u.id, u.username, u.avatar, u.status, u.last_seen, u.status_message,
+        "SELECT DISTINCT u.id, u.username, u.avatar, u.status, u.last_seen, u.status_message,
             (SELECT COUNT(*) FROM messages m WHERE m.receiver_id = u.id AND m.sender_id = ? AND m.is_deleted_receiver = 0 AND m.is_deleted_sender = 0) as unread,
             (SELECT body FROM messages m WHERE (m.sender_id = ? AND m.receiver_id = u.id) OR (m.sender_id = ? AND m.receiver_id = u.id) AND m.is_deleted_sender = 0 AND m.is_deleted_receiver = 0 ORDER BY m.created_at DESC LIMIT 1) as last_msg,
             (SELECT created_at FROM messages m WHERE (m.sender_id = ? AND m.receiver_id = u.id) OR (m.sender_id = ? AND m.receiver_id = u.id) AND m.is_deleted_sender = 0 AND m.is_deleted_receiver = 0 ORDER BY m.created_at DESC LIMIT 1) as last_msg_time

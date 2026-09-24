@@ -1,4 +1,4 @@
-// WebConnect - Calls Module (WebRTC) - Fixed
+// WebConnect - Calls Module (WebRTC)
 class CallApp {
     constructor() {
         this.pc = null;
@@ -19,6 +19,9 @@ class CallApp {
         this.checkForIncomingCalls();
     }
 
+    /**
+     * Check for incoming calls (URL parameter or polling)
+     */
     async checkForIncomingCalls() {
         // Check URL for call_id parameter
         const urlParams = new URLSearchParams(window.location.search);
@@ -29,7 +32,7 @@ class CallApp {
             return;
         }
         
-        // Poll for incoming calls
+        // Poll for incoming calls every 5 seconds
         setInterval(async () => {
             try {
                 const res = await fetch('/api/calls.php?action=get_incoming');
@@ -49,6 +52,9 @@ class CallApp {
         }, 5000);
     }
 
+    /**
+     * Show incoming call from URL parameter
+     */
     async showIncomingCallFromUrl(callId) {
         try {
             const res = await fetch('/api/calls.php?action=get_status&call_id=' + callId);
@@ -64,6 +70,43 @@ class CallApp {
         }
     }
 
+    /**
+     * Show incoming call UI
+     */
+    showIncomingCall(call) {
+        console.log('[CallApp] showIncomingCall', call, 'currentCallId:', this.callId);
+        if (!this.els.overlay) return;
+        
+        // Don't show if already in a call or if this call has ended
+        if (this.callId && this.callId != call.id) {
+            console.log('[CallApp] Ignoring new call - already in another call');
+            return;
+        }
+        
+        this.callId = call.id;
+        this.callPeerId = call.caller_id;
+        this.callType = call.call_type || 'voice';
+        this.isCaller = false;
+        
+        // Get caller info
+        if (this.els.callerName) {
+            this.els.callerName.textContent = call.caller_name || 'Unknown';
+        }
+        
+        // Show overlay
+        this.els.overlay.classList.remove('d-none');
+        if (this.els.incomingCallControls) {
+            this.els.incomingCallControls.style.display = 'flex';
+        }
+        if (this.els.callStatus) {
+            this.els.callStatus.textContent = 'Incoming ' + (this.callType || 'voice') + ' call...';
+        }
+        console.log('[CallApp] Showing incoming call, callId:', this.callId);
+    }
+
+    /**
+     * Cache DOM elements
+     */
     cacheElements() {
         this.els = {
             overlay: document.getElementById('call-overlay'),
@@ -81,6 +124,9 @@ class CallApp {
         };
     }
 
+    /**
+     * Bind event listeners
+     */
     bindEvents() {
         const els = this.els;
         if (els.muteBtn) els.muteBtn.addEventListener('click', () => this.toggleMute());
@@ -90,6 +136,9 @@ class CallApp {
         if (els.rejectCallBtn) els.rejectCallBtn.addEventListener('click', () => this.rejectCall());
     }
 
+    /**
+     * Start voice call
+     */
     startVoiceCall(targetId) {
         console.log('[CallApp] startVoiceCall', targetId);
         if (!targetId) {
@@ -99,6 +148,9 @@ class CallApp {
         this.startCall(targetId, 'voice');
     }
 
+    /**
+     * Start video call
+     */
     startVideoCall(targetId) {
         console.log('[CallApp] startVideoCall', targetId);
         if (!targetId) {
@@ -108,6 +160,9 @@ class CallApp {
         this.startCall(targetId, 'video');
     }
 
+    /**
+     * Start a new call
+     */
     async startCall(targetId, type) {
         this.callType = type;
         this.isCaller = true;
@@ -139,6 +194,9 @@ class CallApp {
         }
     }
 
+    /**
+     * Setup WebRTC peer connection
+     */
     async setupPeerConnection() {
         const rtcConfig = {
             iceServers: [
@@ -201,7 +259,7 @@ class CallApp {
                     action: 'signal', 
                     call_id: this.callId, 
                     type: 'offer', 
-                    data: JSON.stringify(offer.sdp) 
+                    data: offer.sdp
                 })
             });
             const data = await res.json();
@@ -211,6 +269,9 @@ class CallApp {
         }
     }
 
+    /**
+     * Accept incoming call
+     */
     async acceptCall() {
         if (!this.callId) {
             alert('No incoming call to accept');
@@ -234,19 +295,19 @@ class CallApp {
                 return;
             }
             
-            // Poll for offer until it's available
+            // Poll for offer until it's available (max 5 seconds)
             let offerData = null;
             for (let i = 0; i < 10; i++) {
                 await new Promise(r => setTimeout(r, 500));
                 const offerRes = await fetch('/api/calls.php?action=get_offer&call_id=' + this.callId);
-                const offerResult = await offerRes.json();
-                if (offerResult.success && offerResult.data) {
-                    offerData = offerResult.data;
+                offerData = await offerRes.text();
+                if (offerData && offerData.length > 10) {
                     break;
                 }
             }
             
             if (offerData) {
+                console.log('[CallApp] Got offer data, length:', offerData.length);
                 await this.setupPeerConnection();
                 await this.pc.setRemoteDescription(new RTCSessionDescription({ type: 'offer', sdp: offerData }));
                 const answer = await this.pc.createAnswer();
@@ -254,11 +315,13 @@ class CallApp {
                 const ansRes = await fetch('/api/calls.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'signal', call_id: this.callId, type: 'answer', data: JSON.stringify(answer.sdp) })
+                    body: JSON.stringify({ action: 'signal', call_id: this.callId, type: 'answer', data: answer.sdp })
                 });
                 console.log('[CallApp] Answer sent');
             } else {
                 console.error('[CallApp] Offer not found after polling');
+                alert('Failed to establish call: offer not received');
+                this.endCall();
             }
         } catch (e) {
             console.error('[CallApp] Accept call error:', e);
@@ -266,19 +329,27 @@ class CallApp {
         }
     }
 
+    /**
+     * Reject incoming call
+     */
     async rejectCall() {
+        console.log('[CallApp] Rejecting call, callId:', this.callId);
         if (this.callId) {
             await fetch('/api/calls.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'reject', call_id: this.callId })
-            });
+            }).catch(e => console.error('[CallApp] Reject call error:', e));
         }
         this.endCall();
     }
 
+    /**
+     * End call
+     */
     async endCall() {
-        console.log('[CallApp] Ending call');
+        console.log('[CallApp] Ending call, callId:', this.callId);
+        // Don't send end request if callId is null
         if (this.callId) {
             await fetch('/api/calls.php', {
                 method: 'POST',
@@ -304,6 +375,9 @@ class CallApp {
         this.callPeerId = null;
     }
 
+    /**
+     * Toggle mute
+     */
     toggleMute() {
         this.isMuted = !this.isMuted;
         if (this.localStream) {
@@ -314,6 +388,9 @@ class CallApp {
         }
     }
 
+    /**
+     * Toggle camera
+     */
     toggleCamera() {
         this.isCameraOff = !this.isCameraOff;
         if (this.localStream) {
@@ -324,6 +401,9 @@ class CallApp {
         }
     }
 
+    /**
+     * Show call UI
+     */
     showCallUI(status) {
         if (this.els.overlay) this.els.overlay.classList.remove('d-none');
         if (this.els.callStatus) this.els.callStatus.textContent = status;
@@ -335,6 +415,9 @@ class CallApp {
         }
     }
 
+    /**
+     * Start call polling
+     */
     startCallPolling() {
         if (this.pollInterval) clearInterval(this.pollInterval);
         this.pollInterval = setInterval(async () => {

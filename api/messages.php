@@ -12,7 +12,7 @@ $action = $_GET['action'] ?? $_POST['action'] ?? '';
 
 switch ($action) {
     case 'get':
-        $chatId = (int) ($_GET['id'] ?? 0);
+        $chatId = (int) ($_GET['id'] ?? $_GET['chat_id'] ?? 0);
         $chatType = $_GET['type'] ?? 'private';
         $limit = (int) ($_GET['limit'] ?? 50);
 
@@ -22,10 +22,9 @@ switch ($action) {
             }
             $messages = Database::fetchAll(
                 "SELECT gm.*, u.username, u.avatar,
-                    (SELECT GROUP_CONCAT CONCAT('(', reaction, ')', COUNT(*)) SEPARATOR '') as reactions_json
+                    (SELECT GROUP_CONCAT(CONCAT('(', reaction, ')', COUNT(*)) SEPARATOR '') FROM group_message_reactions gmr WHERE gmr.message_id = gm.id GROUP BY gmr.reaction) as reactions_json
                  FROM group_messages gm
                  JOIN users u ON gm.sender_id = u.id
-                 LEFT JOIN group_message_reactions gmr ON gmr.message_id = gm.id
                  WHERE gm.group_id = ? AND gm.is_deleted = 0
                  GROUP BY gm.id
                  ORDER BY gm.created_at DESC LIMIT ?",
