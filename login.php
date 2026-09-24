@@ -79,7 +79,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="text-center mt-3">
             <a href="<?php echo APP_URL; ?>/admin/login.php" class="text-muted small">Admin Login</a>
         </div>
+        
+        <div class="demo-accounts mt-4 p-3 bg-light rounded">
+            <h6 class="text-muted mb-3"><i class="fas fa-info-circle me-2"></i>Demo Accounts</h6>
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">User</span>
+                        <input type="text" class="form-control" value="ali" readonly>
+                        <input type="password" class="form-control" value="password123" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">User</span>
+                        <input type="text" class="form-control" value="meimei" readonly>
+                        <input type="password" class="form-control" value="password123" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">User</span>
+                        <input type="text" class="form-control" value="abu" readonly>
+                        <input type="password" class="form-control" value="password123" readonly>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary w-100 mt-2" onclick="copyDemoAccounts()">
+                <i class="fas fa-copy me-1"></i>Copy All Credentials
+            </button>
+        </div>
     </div>
 </div>
+
+<script>
+function copyDemoAccounts() {
+    const text = `User: ali / password123
+User: meimei / password123
+User: abu / password123
+Admin: admin / admin123
+Admin: superadmin / superadmin123`;
+    navigator.clipboard.writeText(text).then(() => {
+        alert('Demo accounts copied to clipboard!');
+    });
+}
+</script>
 
 <?php require_once 'includes/layout_end.php'; ?>

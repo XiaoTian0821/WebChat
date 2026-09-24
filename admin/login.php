@@ -62,6 +62,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="text-center mt-3">
                         <a href="<?php echo APP_URL; ?>/login.php" class="small text-muted">Back to Login</a>
                     </div>
+                    <div class="col-md-6 mb-2">
+                    <div class="input-group input-group-sm">
+                            <span class="input-group-text">Admin</span>
+                            <input type="text" class="form-control" value="admin" readonly>
+                            <input type="password" class="form-control" value="admin123" readonly>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
