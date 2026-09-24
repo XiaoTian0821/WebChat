@@ -12,9 +12,10 @@ $additionalScripts = ['/assets/js/chat.js', '/assets/js/calls.js'];
 // Get URL parameter for direct chat
 $chatId = (int) ($_GET['id'] ?? 0);
 $chatType = $_GET['type'] ?? 'private';
+$callId = (int) ($_GET['call_id'] ?? 0);
 ?>
 
-<div class="chat-container" id="chat-container" data-chat-id="<?php echo $chatId; ?>">
+<div class="chat-container" id="chat-container" data-chat-id="<?php echo $chatId; ?>" data-call-id="<?php echo $callId; ?>">
     <!-- Sidebar -->
     <div class="chat-sidebar" id="chat-sidebar">
         <div class="sidebar-header">
@@ -98,46 +99,45 @@ $chatType = $_GET['type'] ?? 'private';
                         <button type="button" class="emoji-btn" data-emoji="❤️">❤️</button>
                         <button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
                         <button type="button" class="emoji-btn" data-emoji="👏">👏</button>
-                        <button type="button" class="emoji-btn" data-emoji="😢">😢</button>
-                        <button type="button" class="emoji-btn" data-emoji="😮">😮</button>
                         <button type="button" class="emoji-btn" data-emoji="🎉">🎉</button>
+                        <button type="button" class="emoji-btn" data-emoji="😊">😊</button>
+                        <button type="button" class="emoji-btn" data-emoji="😢">😢</button>
+                        <button type="button" class="emoji-btn" data-emoji="😡">😡</button>
+                        <button type="button" class="emoji-btn" data-emoji="🤔">🤔</button>
+                        <button type="button" class="emoji-btn" data-emoji="👀">👀</button>
                     </div>
                 </div>
             </div>
-            <textarea class="form-control" id="message-input" placeholder="Type a message..." rows="1"></textarea>
-            <input type="file" id="attach-input" class="d-none" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain,application/zip">
             <button class="input-action-btn" type="button" id="attach-btn" title="Attach File">
                 <i class="fas fa-paperclip"></i>
+                <input type="file" id="attach-input" class="d-none" accept="image/*,audio/*,video/*,.pdf,.doc,.docx">
             </button>
-            <button class="input-action-btn" type="button" id="voice-btn" title="Voice Message">
+            <textarea class="message-input" id="message-input" placeholder="Type a message..." rows="1"></textarea>
+            <button class="input-action-btn" type="button" id="voice-btn" title="Record Voice">
                 <i class="fas fa-microphone"></i>
             </button>
-            <button class="input-action-btn btn-send" type="button" id="send-btn" title="Send">
+            <button class="input-action-btn btn-primary" type="button" id="send-btn">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>
 
-        <!-- Voice Recorder Overlay -->
-        <div class="voice-recorder-overlay d-none" id="voice-recorder">
-            <div class="voice-recorder-content">
-                <div class="voice-timer" id="voice-timer">0:00</div>
-                <button class="btn btn-danger" id="voice-cancel"><i class="fas fa-times"></i> Cancel</button>
-                <button class="btn btn-success" id="voice-send"><i class="fas fa-paper-plane"></i> Send</button>
-            </div>
+        <!-- Voice Recorder -->
+        <div class="voice-recorder d-none" id="voice-recorder">
+            <div class="voice-timer" id="voice-timer">0:00</div>
+            <button class="btn btn-sm btn-danger" id="voice-cancel"><i class="fas fa-times"></i></button>
+            <button class="btn btn-sm btn-success" id="voice-send"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
     <!-- Info Panel -->
     <div class="chat-info-panel d-none" id="chat-info-panel">
-        <div class="info-panel-section">
-            <h6>Media & Files</h6>
-            <div class="media-grid" id="media-grid">
-                <div class="text-muted small p-2">No media shared yet</div>
-            </div>
+        <div class="p-3 border-bottom">
+            <h6>User Info</h6>
         </div>
-        <div class="info-panel-section">
-            <h6>Members</h6>
-            <div id="members-list"></div>
+        <div class="p-3">
+            <div id="user-info-content">
+                <p class="text-muted">Select a conversation to view info</p>
+            </div>
         </div>
     </div>
 </div>
