@@ -13,6 +13,7 @@ class ChatApp {
     }
 
     init() {
+        console.log('[ChatApp] Initializing...');
         this.cacheElements();
         this.bindEvents();
         this.loadConversations();
@@ -38,7 +39,9 @@ class ChatApp {
             chatHeaderName: document.getElementById('chat-header-name'),
             chatHeaderStatus: document.getElementById('chat-header-status'),
             chatHeaderAvatar: document.getElementById('chat-header-avatar'),
-            emojiPicker: document.getElementById('emoji-picker'),
+            emojiPickerDropdown: document.getElementById('emoji-picker-dropdown'),
+            emojiBtn: document.getElementById('emoji-btn'),
+            emojiPickerWrapper: document.getElementById('emoji-picker-wrapper'),
             chatInfoPanel: document.getElementById('chat-info-panel'),
             voiceRecorder: document.getElementById('voice-recorder'),
             voiceTimer: document.getElementById('voice-timer'),
@@ -46,12 +49,21 @@ class ChatApp {
             voiceSend: document.getElementById('voice-send'),
             sidebarTabs: document.querySelectorAll('.sidebar-tabs .nav-link'),
             searchInput: document.getElementById('search-conversations'),
+            toggleInfoBtn: document.getElementById('toggle-info'),
+            voiceCallBtn: document.getElementById('voice-call-btn'),
+            videoCallBtn: document.getElementById('video-call-btn'),
         };
+        console.log('[ChatApp] Elements cached:', Object.keys(this.els));
     }
 
     bindEvents() {
         const els = this.els;
+        console.log('[ChatApp] Binding events...');
+        
+        // Send message
         if (els.sendBtn) els.sendBtn.addEventListener('click', () => this.sendMessage());
+        
+        // Message input
         if (els.messageInput) {
             els.messageInput.addEventListener('keydown', e => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -61,23 +73,51 @@ class ChatApp {
             });
             els.messageInput.addEventListener('input', () => this.handleTyping());
         }
-        if (els.attachBtn) els.attachBtn.addEventListener('click', () => els.attachInput?.click());
+        
+        // Attach file
+        if (els.attachBtn) els.attachBtn.addEventListener('click', () => {
+            console.log('[ChatApp] Attach button clicked');
+            els.attachInput?.click();
+        });
         if (els.attachInput) els.attachInput.addEventListener('change', e => this.handleFileUpload(e));
+        
+        // Reply
         if (els.replyCancel) els.replyCancel.addEventListener('click', () => this.cancelReply());
+        
+        // Voice recording
         if (els.voiceBtn) els.voiceBtn.addEventListener('click', () => this.toggleVoiceRecording());
         if (els.voiceCancel) els.voiceCancel.addEventListener('click', () => this.cancelVoiceRecording());
         if (els.voiceSend) els.voiceSend.addEventListener('click', () => this.sendVoiceRecording());
-        if (els.emojiPicker) {
-            els.emojiPicker.addEventListener('click', e => {
+        
+        // Emoji picker
+        if (els.emojiBtn) {
+            els.emojiBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                console.log('[ChatApp] Emoji button clicked');
+                els.emojiPickerDropdown?.classList.toggle('d-none');
+            });
+        }
+        if (els.emojiPickerWrapper) {
+            els.emojiPickerWrapper.addEventListener('click', e => {
                 if (e.target.classList.contains('emoji-btn')) {
                     const input = els.messageInput;
-                    if (input) { input.value += e.target.textContent; input.focus(); }
-                    els.emojiPicker.classList.remove('show');
+                    if (input) { input.value += e.target.dataset.emoji; input.focus(); }
+                    els.emojiPickerDropdown?.classList.add('d-none');
                 }
             });
         }
+        
+        // Back button
         if (els.chatBackBtn) els.chatBackBtn.addEventListener('click', () => this.showSidebar());
         
+        // Info panel toggle
+        if (els.toggleInfoBtn) els.toggleInfoBtn.addEventListener('click', () => this.toggleInfoPanel());
+        
+        // Voice/Video call buttons
+        if (els.voiceCallBtn) els.voiceCallBtn.addEventListener('click', () => this.startVoiceCall());
+        if (els.videoCallBtn) els.videoCallBtn.addEventListener('click', () => this.startVideoCall());
+        
+        // Search conversations
         if (els.searchInput) {
             let debounceTimer;
             els.searchInput.addEventListener('input', () => {
@@ -86,6 +126,7 @@ class ChatApp {
             });
         }
         
+        // Sidebar tabs
         if (els.sidebarTabs && els.sidebarTabs.length > 0) {
             els.sidebarTabs.forEach(tab => {
                 tab.addEventListener('click', e => {
@@ -105,6 +146,15 @@ class ChatApp {
                 });
             });
         }
+        
+        // Close emoji picker when clicking outside
+        document.addEventListener('click', e => {
+            if (els.emojiPickerDropdown && !els.emojiPickerWrapper?.contains(e.target)) {
+                els.emojiPickerDropdown.classList.add('d-none');
+            }
+        });
+        
+        console.log('[ChatApp] Events bound');
     }
 
     filterConversations(query) {
@@ -126,12 +176,6 @@ class ChatApp {
             if (this.els.groupList) {
                 if (data.success && data.data.length > 0) {
                     this.els.groupList.innerHTML = data.data.map(g => this.renderGroupItem(g)).join('');
-                    this.els.groupList.querySelectorAll('.group-item').forEach(el => {
-                        el.addEventListener('click', e => {
-                            e.preventDefault();
-                            this.selectGroup(parseInt(el.dataset.id));
-                        });
-                    });
                 } else {
                     this.els.groupList.innerHTML = '<div class="p-3 text-center text-muted small">No groups yet</div>';
                 }
@@ -161,16 +205,13 @@ class ChatApp {
         `;
     }
 
-    async selectGroup(id) {
-        window.location.href = '/group_chat.php?id=' + id;
-    }
-
     async loadConversations() {
         if (!this.els.conversationList) return;
         this.els.conversationList.innerHTML = '<div class="loading-spinner p-3"><i class="fas fa-spinner fa-spin"></i></div>';
         try {
             const res = await fetch('/api/chat.php?action=conversations');
             const data = await res.json();
+            console.log('[ChatApp] Conversations response:', data);
             if (this.els.conversationList) {
                 if (data.success && data.data.length > 0) {
                     this.els.conversationList.innerHTML = data.data.map(c => this.renderConversationItem(c)).join('');
@@ -219,6 +260,19 @@ class ChatApp {
         }
         this.showChat();
         await this.loadMessages();
+        await this.loadChatInfo(id);
+    }
+
+    async loadChatInfo(id) {
+        try {
+            const res = await fetch(`/api/chat.php?action=chat_info&id=${id}`);
+            const data = await res.json();
+            if (data.success && this.els.chatHeaderName) {
+                this.els.chatHeaderName.textContent = data.data.username;
+                this.els.chatHeaderStatus.innerHTML = getStatusBadge(data.data.status, data.data.last_seen);
+                this.els.chatHeaderAvatar.innerHTML = this.getAvatarHTML(data.data, 40);
+            }
+        } catch (e) { console.error('Load chat info error:', e); }
     }
 
     showChat() {
@@ -228,6 +282,11 @@ class ChatApp {
     showSidebar() {
         if (this.els.chatMain) this.els.chatMain.classList.add('chat-hidden');
         this.currentChatId = null;
+    }
+
+    toggleInfoPanel() {
+        const panel = this.els.chatInfoPanel;
+        if (panel) panel.classList.toggle('d-none');
     }
 
     async loadMessages() {
@@ -263,20 +322,20 @@ class ChatApp {
             ? this.getAvatarHTML({ username: 'Me' })
             : this.getAvatarHTML({ username: m.sender_username, avatar: m.sender_avatar });
         let content = '';
-        if (m.message_type === 'text') {
-            content = `<div class="msg-text">${this.esc(m.message)}</div>`;
-        } else if (m.message_type === 'image') {
+        if (m.type === 'text' || !m.type) {
+            content = `<div class="msg-text">${this.esc(m.body)}</div>`;
+        } else if (m.type === 'image') {
             content = `<img src="/api/media.php?file=${encodeURIComponent(m.file_path)}&type=image" class="msg-image" alt="image">`;
-        } else if (m.message_type === 'file') {
+        } else if (m.type === 'file') {
             content = `<div class="msg-file"><i class="fas fa-file"></i> ${this.esc(m.file_name)}</div>`;
-        } else if (m.message_type === 'voice') {
+        } else if (m.type === 'voice') {
             content = `<audio controls src="/api/media.php?file=${encodeURIComponent(m.file_path)}&type=voice" style="width:200px;"></audio>`;
         }
         return `
             <div class="${bubbleClass}" data-id="${m.id}" data-sender="${m.sender_id}">
                 ${!isMe ? avatar : ''}
                 <div class="msg-content">
-                    ${m.reply_to ? `<div class="msg-reply">Reply: ${this.esc(m.reply_message || '[deleted]')}</div>` : ''}
+                    ${m.reply_to_id ? `<div class="msg-reply">Reply: ${this.esc(m.reply_body || '[deleted]')}</div>` : ''}
                     ${content}
                     <div class="msg-meta">
                         <span class="msg-time">${formatTime(m.created_at)}</span>
@@ -307,13 +366,17 @@ class ChatApp {
                 })
             });
             const data = await res.json();
+            console.log('[ChatApp] Send message response:', data);
             if (data.success) {
                 input.value = '';
                 this.replyTo = null;
                 this.hideReplyBar();
                 await this.loadMessages();
+            } else {
+                console.error('[ChatApp] Send message failed:', data.message);
+                alert('Failed to send message: ' + (data.message || 'Unknown error'));
             }
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error('[ChatApp] Send message error:', e); }
     }
 
     handleTyping() {
@@ -339,6 +402,7 @@ class ChatApp {
         try {
             const res = await fetch('/api/upload.php', { method: 'POST', body: formData });
             const data = await res.json();
+            console.log('[ChatApp] File upload response:', data);
             if (data.success) await this.loadMessages();
         } catch (e) { console.error(e); }
         e.target.value = '';
@@ -365,6 +429,7 @@ class ChatApp {
             this.startVoiceTimer();
         } catch (e) {
             console.error('Microphone access denied:', e);
+            alert('Microphone access denied. Please allow microphone access.');
         }
     }
 
@@ -407,7 +472,7 @@ class ChatApp {
         if (bar) {
             bar.classList.remove('d-none');
             const text = this.els.replyText;
-            if (text) text.textContent = m.message ? m.message.substring(0, 30) + '...' : '[image]';
+            if (text) text.textContent = m.body ? m.body.substring(0, 30) + '...' : '[image]';
         }
     }
 
@@ -447,7 +512,22 @@ class ChatApp {
         clearInterval(this.pollInterval);
         this.pollInterval = setInterval(() => {
             if (this.currentChatId) this.loadMessages();
+            this.updateNotificationBadge();
         }, 2000);
+    }
+
+    async updateNotificationBadge() {
+        try {
+            const res = await fetch('/api/notifications.php?action=count');
+            const data = await res.json();
+            if (data.success && data.data !== undefined) {
+                const badge = document.querySelector('.nav-link[href*="notifications"] .badge, .navbar .badge');
+                if (badge) {
+                    badge.textContent = data.data;
+                    badge.style.display = data.data > 0 ? '' : 'none';
+                }
+            }
+        } catch (e) {}
     }
 
     scrollToBottom() {
@@ -461,17 +541,35 @@ class ChatApp {
             return `<img src="/api/media.php?file=${encodeURIComponent(m.avatar)}&type=avatar" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;" class="me-1">`;
         }
         const initial = (m.username || 'U')[0].toUpperCase();
-        return `<div class="avatar avatar-default" style="width:${size}px;height:${size}px;font-size:${size*0.4}px;flex-shrink:0;">${initial}</div>`;
+        return `<div class="avatar avatar-default" style="width:${size}px;height:${size}px;font-size:${size*0.4}px;flex-shrink:0;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);">${initial}</div>`;
     }
 
-    startVoiceCall(id) {
-        console.log('[ChatApp] startVoiceCall', id);
-        if (window.calls) window.calls.startVoiceCall(id);
+    startVoiceCall() {
+        console.log('[ChatApp] startVoiceCall', this.currentChatId);
+        if (!this.currentChatId) {
+            alert('Please select a conversation first');
+            return;
+        }
+        if (window.calls) {
+            window.calls.startVoiceCall(this.currentChatId);
+        } else {
+            console.warn('[ChatApp] calls.js not loaded');
+            alert('Calling feature is not available');
+        }
     }
 
-    startVideoCall(id) {
-        console.log('[ChatApp] startVideoCall', id);
-        if (window.calls) window.calls.startVideoCall(id);
+    startVideoCall() {
+        console.log('[ChatApp] startVideoCall', this.currentChatId);
+        if (!this.currentChatId) {
+            alert('Please select a conversation first');
+            return;
+        }
+        if (window.calls) {
+            window.calls.startVideoCall(this.currentChatId);
+        } else {
+            console.warn('[ChatApp] calls.js not loaded');
+            alert('Calling feature is not available');
+        }
     }
 
     esc(str) {
@@ -495,6 +593,9 @@ class ChatApp {
     }
 }
 
+// Initialize chat on page load
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('[DOM] Ready, initializing ChatApp...');
     window.chatApp = new ChatApp();
+    console.log('[DOM] ChatApp initialized');
 });

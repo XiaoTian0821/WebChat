@@ -18,6 +18,11 @@ window.fetch = function(input, init) {
 // =====================================================
 // Utility Functions
 // =====================================================
+function getCurrentUserId() {
+    const meta = document.querySelector('meta[name="user-id"]');
+    return meta ? parseInt(meta.content) : 0;
+}
+
 function getCSRFToken() {
     return document.querySelector('meta[name="csrf-token"]')?.content || '';
 }
@@ -36,6 +41,43 @@ async function apiRequest(endpoint, options = {}) {
 function formatTime(dateStr) {
     const d = new Date(dateStr);
     return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function timeAgo(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    const diff = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+    return Math.floor(diff / 86400) + 'd ago';
+}
+
+function getStatusBadge(status, lastSeen) {
+    const colors = {
+        online: 'bg-success',
+        away: 'bg-warning',
+        busy: 'bg-danger',
+        offline: 'bg-secondary'
+    };
+    const labels = {
+        online: 'Online',
+        away: 'Away',
+        busy: 'Busy',
+        offline: 'Offline'
+    };
+    const color = colors[status] || 'bg-secondary';
+    const label = labels[status] || 'Offline';
+    let time = '';
+    if (lastSeen) {
+        const d = new Date(lastSeen);
+        const diff = Math.floor((Date.now() - d.getTime()) / 1000);
+        if (diff < 60) time = 'just now';
+        else if (diff < 3600) time = Math.floor(diff / 60) + 'm ago';
+        else if (diff < 86400) time = Math.floor(diff / 3600) + 'h ago';
+        else time = Math.floor(diff / 86400) + 'd ago';
+    }
+    return `<span class="status-dot ${color}" title="${label}"></span> ${label} ${time ? '· ' + time : ''}`;
 }
 
 function formatDate(dateStr) {
